@@ -1,11 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const cors_proxy = require('cors-anywhere');
-const TorrentIndexer = require('torrent-indexer');
+const xtorrent = require('xtorrent');
  
 const app = express();
 
-const torrentIndexer = new TorrentIndexer();
 
 /*const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 10 minutes 20 request
@@ -16,7 +15,7 @@ const torrentIndexer = new TorrentIndexer();
 app.use(limiter);*/
 
 var allowedOrigins = ['http://localhost:3000',
-  'https://ylight.xyz'];
+  'https://paschal533.github.io/tracemovies'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -35,9 +34,21 @@ app.options("*", cors());
 
 const PORT = process.env.PORT || 5000;
 
+ 
 app.get("/movie", async (req, res) => {
-  const torrents = await torrentIndexer.search(req.query.name, req.query.type, 4);
-  res.json(torrents);
+  xtorrent.search({query: req.query.name , category: req.query.type}).then(data => {
+  res.json(data);
+  });
+})
+
+app.get("/download", async (req, res) => {
+  //console.log(`http://1337x.to/${req.query.torrent}/${req.query.movieId}/${req.query.movieName}`);
+  xtorrent
+  .info(
+    `https://1337x.to/${req.query.torrent}/${req.query.movieId}/${req.query.movieName}/`
+  ).then(data => {
+  res.json(data);
+  });
 })
 
 
