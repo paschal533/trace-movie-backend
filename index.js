@@ -15,7 +15,7 @@ const app = express();
 app.use(limiter);*/
 
 var allowedOrigins = ['http://localhost:3000',
-  'https://paschal533.github.io/tracemovies'];
+  'https://paschal533.github.io/tracemovies','https://paschal533.github.io'];
 
 app.use(cors({
   origin: function (origin, callback) {
