@@ -1,18 +1,15 @@
 const express = require("express");
 const cors = require("cors");
-const cors_proxy = require('cors-anywhere');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+require('dotenv/config');
 const xtorrent = require('xtorrent');
- 
+const postsRoute = require('./Routes/Post');
+
+
 const app = express();
 
 
-/*const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 10 minutes 20 request
-  max: 10 // limit each IP to 100 requests per windowMs
-});
-
-//  apply to all requests
-app.use(limiter);*/
 
 var allowedOrigins = ['http://localhost:3000',
   'https://paschal533.github.io/tracemovies','https://paschal533.github.io'];
@@ -32,6 +29,15 @@ app.use(cors({
 }));
 app.options("*", cors());
 
+app.use('/post', postsRoute);
+app.use(bodyParser.json());
+
+//connect to db
+mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+    console.log('connected to db')
+}
+)
+
 const PORT = process.env.PORT || 5000;
 
  
@@ -42,7 +48,6 @@ app.get("/movie", async (req, res) => {
 })
 
 app.get("/download", async (req, res) => {
-  //console.log(`http://1337x.to/${req.query.torrent}/${req.query.movieId}/${req.query.movieName}`);
   xtorrent
   .info(
     `https://1337x.to/${req.query.torrent}/${req.query.movieId}/${req.query.movieName}/`
@@ -50,17 +55,5 @@ app.get("/download", async (req, res) => {
   res.json(data);
   });
 })
-
-
-
-
-let proxy = cors_proxy.createServer({
-  originWhitelist: [], // Allow all origins
-  requireHeaders: [], // Do not require any headers.
-  removeHeaders: [] // Do not remove any headers.
-});
-
- 
-
 
 app.listen(PORT, () => console.log(`Server is listening on port ${PORT}.`));
