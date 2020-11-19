@@ -33,7 +33,7 @@ app.use('/post', postsRoute);
 app.use(bodyParser.json());
 
 //connect to db
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true }, () => {
+mongoose.connect('mongodb+srv://paschal:84316860p@cluster0.v0kgk.mongodb.net/traceDB?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }, () => {
     console.log('connected to db')
 }
 )
