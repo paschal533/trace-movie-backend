@@ -29,7 +29,6 @@ app.use(cors({
 }));
 app.options("*", cors());
 
-app.use('/post', postsRoute);
 app.use(bodyParser.json());
 
 //connect to db
@@ -37,6 +36,8 @@ mongoose.connect('mongodb+srv://paschal:84316860p@cluster0.v0kgk.mongodb.net/tra
     console.log('connected to db')
 }
 )
+
+app.use('/post', postsRoute);
 
 const PORT = process.env.PORT || 5000;
 

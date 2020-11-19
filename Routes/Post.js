@@ -4,10 +4,11 @@ const router = express.Router();
 
 //submits a post
 router.post('/request', async (req, res) => {
+    //console.log(req.body.name, req.body.email, req.body.type);
     const post = new Post({
-        name: req.query.name,
-        email: req.query.email,
-        type: req.query.type
+        name: req.body.name,
+        email: req.body.email,
+        type: req.body.type
     });
     try{
         const savedPost = await post.save();
